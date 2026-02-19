@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 const DEMO_EMAIL = "demo@fintrack.app";
 const DEMO_PASSWORD = "demo123456";
 
-export async function GET() {
+export async function GET(request: Request) {
   // Check if demo user exists
   let user = await db.user.findUnique({ where: { email: DEMO_EMAIL } });
 
@@ -159,6 +159,6 @@ export async function GET() {
   }
 
   // Redirect to login page with demo credentials auto-filled
-  const url = new URL("/login?demo=true", process.env.AUTH_URL || "http://localhost:3000");
-  return NextResponse.redirect(url);
+  const { origin } = new URL(request.url);
+  return NextResponse.redirect(new URL("/login?demo=true", origin));
 }
